@@ -1,0 +1,23 @@
+# Dependency directory
+node_modules
+
+# Debug log from npm
+npm-debug.log
+
+# Environment variables
+.env
+
+# Build directory
+dist
+
+# Mac files
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw? 

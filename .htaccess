@@ -1,0 +1,16 @@
+# Chặn truy cập trực tiếp vào file .js
+<FilesMatch "\.js$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Cho phép truy cập vào file bundle.min.js
+<FilesMatch "bundle\.min\.js$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Bảo vệ thư mục dist
+<Directory "dist">
+    Options -Indexes
+</Directory> 

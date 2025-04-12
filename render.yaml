@@ -1,0 +1,20 @@
+static:
+  - name: grok3
+    build:
+      cmd: npm install && npm run build
+    environment:
+      - key: GEMINI_API_KEY
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+      - path: /*.js
+        name: Content-Type
+        value: application/javascript
+      - path: /*.js
+        name: X-Content-Type-Options
+        value: nosniff 
