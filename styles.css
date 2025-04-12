@@ -163,6 +163,75 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Skip Navigation */
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    transition: top 0.3s;
+    z-index: 1001;
+    opacity: 0;
+}
+
+.skip-link:focus {
+    top: 0;
+    opacity: 1;
+}
+
+/* Enhanced Focus Styles */
+:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+}
+
+/* Button Focus States */
+.action-button:focus-visible,
+.theme-toggle:focus-visible,
+.voice-input-button:focus-visible,
+#send-button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Input Focus State */
+#user-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+/* Example Button Focus States */
+.example-button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Dark mode focus adjustments */
+[data-theme="dark"] :focus-visible {
+    outline-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+}
+
 /* Theme toggle */
 .theme-toggle {
     position: relative;
@@ -323,6 +392,47 @@ body {
     background-color: var(--main-bg);
     padding: 0;
 }
+
+/* Touch gesture feedback */
+.chat-container.swiping {
+    transition: transform 0.2s ease;
+}
+
+.chat-container.swiping-up {
+    transform: translateY(-20px);
+}
+
+.chat-container.swiping-down {
+    transform: translateY(20px);
+}
+
+/* Touch action hint */
+.touch-hint {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--chat-bg);
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    font-size: 13px;
+    color: var(--text-dark);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+    border: 1px solid var(--border-color);
+}
+
+.touch-hint.visible {
+    opacity: 1;
+}
+
+[data-theme="dark"] .touch-hint {
+    background-color: var(--bot-msg-bg);
+}
+
 .welcome-screen {
     display: flex;
     flex-direction: column;
@@ -683,6 +793,7 @@ body {
     
     .input-wrapper {
         padding: 8px 12px;
+        gap: 8px;
     }
     
     #user-input {
@@ -719,6 +830,41 @@ body {
     .example-prompts {
         padding: 0 8px;
     }
+    
+    .header-actions {
+        gap: 4px;
+    }
+    
+    .action-button {
+        padding: 4px 8px;
+        font-size: 13px;
+    }
+    
+    .action-button i {
+        margin-right: 4px;
+        font-size: 13px;
+    }
+
+    .message-content {
+        -webkit-user-select: text;
+        user-select: text;
+        cursor: text;
+    }
+    
+    .message-actions {
+        opacity: 1;
+        transform: none;
+    }
+    
+    .action-button {
+        padding: 8px;
+        margin: 0 2px;
+    }
+
+    .voice-input-button {
+        width: 32px;
+        height: 32px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -735,6 +881,21 @@ body {
     .disclaimer {
         font-size: 11px;
         padding: 0 12px;
+    }
+    
+    .header-actions button span {
+        display: none;
+    }
+    
+    .action-button i {
+        margin-right: 0;
+    }
+    
+    .action-button {
+        padding: 6px;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
     }
 }
 
@@ -997,4 +1158,241 @@ pre code {
 [data-theme="dark"] .hljs {
   background-color: #282a36;
   color: #f8f8f2;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-button {
+    background-color: transparent;
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.action-button i {
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.action-button:hover {
+    color: var(--primary-color);
+    background-color: var(--button-hover);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.action-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Keyboard shortcuts modal */
+.shortcuts-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.shortcuts-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+.shortcuts-content {
+    background-color: var(--chat-bg);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    max-width: 480px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.shortcuts-content h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.shortcuts-list {
+    display: grid;
+    gap: 12px;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--main-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.shortcut-keys {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+kbd {
+    background-color: var(--chat-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: var(--text-light);
+    box-shadow: 0 2px 0 var(--border-color);
+}
+
+.shortcut-desc {
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.close-modal {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode adjustments for shortcuts modal */
+[data-theme="dark"] .shortcuts-content {
+    background-color: var(--chat-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .shortcut-item {
+    background-color: var(--bot-msg-bg);
+}
+
+[data-theme="dark"] kbd {
+    background-color: var(--main-bg);
+    border-color: var(--border-color);
+    color: var(--text-light);
+}
+
+/* Responsive adjustments for shortcuts modal */
+@media (max-width: 480px) {
+    .shortcuts-content {
+        padding: 16px;
+    }
+
+    .shortcuts-content h2 {
+        font-size: 20px;
+    }
+
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    kbd {
+        font-size: 12px;
+        padding: 1px 4px;
+    }
+
+    .shortcut-desc {
+        font-size: 13px;
+    }
+}
+
+/* Voice Input Button */
+.voice-input-button {
+    background: transparent;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+    margin-right: 8px;
+    position: relative;
+}
+
+.voice-input-button:hover {
+    background-color: var(--button-hover);
+    color: var(--primary-color);
+}
+
+.voice-input-button.recording {
+    color: #ef4444;
+    animation: pulse 1.5s infinite;
+}
+
+.voice-input-button.recording::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #ef4444;
+    animation: ripple 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
 }

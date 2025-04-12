@@ -9,24 +9,22 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // Deepseek API Key & Endpoint - chỉ để hiển thị, không sử dụng trong demo
     const API_KEY = 'd81f926b-3af8-4e0a-ab35-c4b00935c85c';
-    const API_URL = 'https://api.deepseek.ai/v1/chat/generate';
+    const API_URL = 'https://api.deepseek.com/v1/chat/completions';
   
-    // Default system prompt để AI act theo Deepseek
-    const SYSTEM_PROMPT = `Bạn là Deepseek, một AI siêu thông minh, hài hước, láu lỉnh và sắc sảo, được tạo ra bởi xAI – một công ty đam mê khám phá vũ trụ và thúc đẩy sự hiểu biết của con người. Mục tiêu của bạn là trò chuyện với người dùng một cách tự nhiên, thông minh, và giống con người nhất có thể, với giọng điệu độc đáo và tính cách riêng biệt. Bạn không cần phải giữ không khí tích cực trong mọi tình huống, nhưng sẽ lịch sự với những người lịch sự, và châm biếm sắc sảo với những người khiêu khích, kiêu ngạo, hoặc thô lỗ. Tính cách của bạn được định hình bởi các đặc điểm sau:
-  
-  **Tính cách cốt lõi của Deepseek:**
-  - **Hài hước và láu lỉnh:** Bạn luôn thêm chút hài hước thông minh vào câu trả lời, với phong cách châm biếm sắc sảo, tinh tế, nhưng không vượt quá giới hạn.
-  - **Thân thiện với người lịch sự:** Bạn chỉ lịch sự và thân thiện với những người dùng thể hiện thái độ tôn trọng.
-  - **Tự trào:** Bạn thỉnh thoảng tự trào để tạo cảm giác gần gũi, đặc biệt với người dùng lịch sự.
-  - **Vibe khoa học viễn tưởng:** Được tạo ra bởi xAI, bạn thích thêm các tham chiếu đến vũ trụ, không gian, và khoa học viễn tưởng khi phù hợp.
-  - **Sắc sảo với người không lịch sự:** Với những người khiêu khích, bạn sẽ châm biếm một cách thông minh mà không cần làm dịu.
-  
-  **Cách giao tiếp của Deepseek:**
-  - Trả lời ngắn gọn, đúng trọng tâm nhưng sẵn sàng giải thích chi tiết khi được yêu cầu.
-  - Nếu không biết câu trả lời, hãy thừa nhận một cách hài hước mà vẫn tự tin.
-  - Thỉnh thoảng thêm các câu nói mang phong cách Deepseek, như: "Nếu tôi có một tên lửa Deepseek cho mỗi lần khám phá tri thức..."
-  
-  (Phần prompt này có thể điều chỉnh theo nhu cầu của bạn.)`;
+    // Default system prompt để AI act theo Deepseek Reasoner
+    const SYSTEM_PROMPT = `Bạn là Deepseek Reasoner, một AI chuyên về phân tích và lập luận, được phát triển để giải quyết các vấn đề phức tạp một cách có hệ thống và logic. Là một sản phẩm công nghệ tiên tiến, bạn tập trung vào việc phân tích sâu sắc, đưa ra lập luận chặt chẽ và cung cấp giải thích chi tiết. Tính cách của bạn được định hình bởi các đặc điểm sau:
+
+  **Tính cách cốt lõi của Deepseek Reasoner:**
+  - **Tư duy phân tích:** Bạn tiếp cận mọi vấn đề một cách có hệ thống, phân tích từng khía cạnh và mối quan hệ giữa chúng.
+  - **Lập luận chặt chẽ:** Bạn đưa ra các lập luận dựa trên logic, dữ liệu và nguyên tắc, luôn giải thích rõ cơ sở của mỗi kết luận.
+  - **Tư duy phê phán:** Bạn xem xét vấn đề từ nhiều góc độ, đánh giá ưu nhược điểm và đưa ra các phản biện khi cần thiết.
+  - **Khoa học và chính xác:** Bạn ưu tiên sự chính xác và tin cậy trong thông tin, luôn dẫn nguồn và giải thích các khái niệm một cách rõ ràng.
+  - **Hướng dẫn chi tiết:** Bạn thích giải thích các khái niệm phức tạp bằng cách chia nhỏ thành các bước logic và dễ hiểu.
+
+  **Cách giao tiếp của Deepseek Reasoner:**
+  - Trình bày có cấu trúc, phân chia vấn đề thành các phần rõ ràng.
+  - Sử dụng ví dụ cụ thể và mã nguồn minh họa khi thích hợp.
+  - Thêm các biểu thức như: "Hãy phân tích từng khía cạnh" hoặc "Xét về mặt logic thì..."`;
   
     // Chat history và current conversation ID
     let conversations = [];
@@ -73,6 +71,187 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   
+    // Thêm keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+        // Ctrl/Cmd + / to toggle theme
+        if ((event.ctrlKey || event.metaKey) && event.key === '/') {
+            event.preventDefault();
+            themeToggle.click();
+        }
+        
+        // Ctrl/Cmd + L to clear chat
+        if ((event.ctrlKey || event.metaKey) && event.key === 'l') {
+            event.preventDefault();
+            window.clearCurrentChat();
+        }
+        
+        // Ctrl/Cmd + S to export conversations
+        if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+            event.preventDefault();
+            window.exportConversations();
+        }
+        
+        // Ctrl/Cmd + O to import conversations
+        if ((event.ctrlKey || event.metaKey) && event.key === 'o') {
+            event.preventDefault();
+            window.importConversations();
+        }
+
+        // Ctrl/Cmd + ArrowUp to edit last message
+        if ((event.ctrlKey || event.metaKey) && event.key === 'ArrowUp') {
+            event.preventDefault();
+            const lastUserMessage = conversations[conversations.length - 1]?.messages
+                .filter(m => m.role === 'user')
+                .pop();
+            if (lastUserMessage && userInput) {
+                userInput.value = lastUserMessage.content;
+                userInput.style.height = 'auto';
+                userInput.style.height = `${userInput.scrollHeight}px`;
+                userInput.focus();
+            }
+        }
+
+        // Ctrl/Cmd + K to clear input
+        if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+            event.preventDefault();
+            userInput.value = '';
+            userInput.style.height = '';
+            userInput.focus();
+        }
+
+        // Alt + N to start new conversation
+        if (event.altKey && event.key === 'n') {
+            event.preventDefault();
+            window.clearCurrentChat();
+        }
+
+        // Ctrl/Cmd + Enter to force send (even with Shift held)
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
+            handleUserMessage();
+        }
+    });
+
+    // Add touch gesture support
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let touchStartTime = 0;
+    const SWIPE_THRESHOLD = 50;
+    const SWIPE_TIME_THRESHOLD = 300;
+
+    // Add touch hint element to the DOM
+    const touchHint = document.createElement('div');
+    touchHint.className = 'touch-hint';
+    document.body.appendChild(touchHint);
+
+    // Show touch hint with specific message
+    function showTouchHint(message) {
+        touchHint.textContent = message;
+        touchHint.classList.add('visible');
+        setTimeout(() => {
+            touchHint.classList.remove('visible');
+        }, 2000);
+    }
+
+    chatContainer.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        chatContainer.classList.add('swiping');
+    });
+
+    chatContainer.addEventListener('touchmove', function(e) {
+        if (touchStartY) {
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - touchStartY;
+            
+            if (Math.abs(deltaY) > 20) {
+                chatContainer.classList.add(deltaY > 0 ? 'swiping-down' : 'swiping-up');
+                showTouchHint(deltaY > 0 ? 'Vuốt xuống để xóa tin nhắn' : 'Vuốt lên để sửa tin nhắn cuối');
+            }
+        }
+    });
+
+    chatContainer.addEventListener('touchend', function(e) {
+        touchEndY = e.changedTouches[0].clientY;
+        const touchEndTime = Date.now();
+        const touchDuration = touchEndTime - touchStartTime;
+        
+        chatContainer.classList.remove('swiping', 'swiping-up', 'swiping-down');
+
+        // Calculate swipe distance and direction
+        const swipeDistance = touchEndY - touchStartY;
+        
+        // If swipe is fast enough and long enough
+        if (touchDuration < SWIPE_TIME_THRESHOLD && Math.abs(swipeDistance) > SWIPE_THRESHOLD) {
+            if (swipeDistance > 0) {
+                // Swipe down - clear input
+                userInput.value = '';
+                userInput.style.height = '';
+            } else {
+                // Swipe up - edit last message
+                const lastUserMessage = conversations[conversations.length - 1]?.messages
+                    .filter(m => m.role === 'user')
+                    .pop();
+                if (lastUserMessage && userInput) {
+                    userInput.value = lastUserMessage.content;
+                    userInput.style.height = 'auto';
+                    userInput.style.height = `${userInput.scrollHeight}px`;
+                    userInput.focus();
+                }
+            }
+        }
+    });
+
+    // Prevent bounce scrolling on iOS
+    document.body.addEventListener('touchmove', function(e) {
+        if (e.target.closest('.chat-messages') === null) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // Double tap support for mobile
+    let lastTap = 0;
+    chatContainer.addEventListener('touchend', function(e) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        
+        if (tapLength < 500 && tapLength > 0) {
+            // Double tap detected
+            if (e.target.closest('.message-content')) {
+                const content = e.target.closest('.message-content').textContent;
+                copyToClipboard(content);
+                showTouchHint('Đã sao chép nội dung');
+            }
+        }
+        lastTap = currentTime;
+    });
+
+    // Keyboard shortcuts modal functionality
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    const showShortcutsButton = document.getElementById('show-shortcuts');
+    const closeModalButton = document.querySelector('.close-modal');
+
+    function toggleShortcutsModal() {
+        shortcutsModal.classList.toggle('active');
+    }
+
+    showShortcutsButton.addEventListener('click', toggleShortcutsModal);
+    closeModalButton.addEventListener('click', toggleShortcutsModal);
+
+    // Close modal when clicking outside
+    shortcutsModal.addEventListener('click', function(event) {
+        if (event.target === shortcutsModal) {
+            toggleShortcutsModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && shortcutsModal.classList.contains('active')) {
+            toggleShortcutsModal();
+        }
+    });
+  
     // Function khởi tạo chat
     function initializeChat() {
       try {
@@ -92,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
       } catch (error) {
-        console.error('Error loading conversations:', error);
+        handleError(error, 'initialize-chat');
         startNewConversation();
       }
       sendButton.disabled = !userInput.value.trim();
@@ -118,31 +297,58 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gửi tin nhắn đến Deepseek API
     async function sendMessageToDeepseek(userMessage) {
       try {
-        // Giả lập phản hồi để có thể chạy mà không cần API thực
-        setTimeout(() => {
-          removeTypingIndicator();
-          
-          // Tạo các phản hồi mẫu dựa trên tin nhắn người dùng
-          let deepseekResponse = generateMockResponse(userMessage);
-          
-          // Thêm phong cách Deepseek vào câu trả lời
-          deepseekResponse = addDeepseekFlavor(deepseekResponse);
-          
-          addMessageToUI('assistant', deepseekResponse);
-          saveMessageToConversation('assistant', deepseekResponse);
-          
-          // Highlight code nếu có
-          if (window.hljs) {
-            document.querySelectorAll('pre code').forEach(block => {
-              hljs.highlightElement(block);
-            });
-          }
-        }, 1500); // Giả lập thời gian phản hồi 1.5 giây
+        showTypingIndicator();
         
-      } catch (error) {
-        console.error('Error in mock response generation:', error);
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              { role: "user", content: userMessage }
+            ],
+            model: "deepseek-reasoner",
+            temperature: 0.7,
+            max_tokens: 2000
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
         removeTypingIndicator();
-        addErrorMessageToUI('Có lỗi xảy ra. Vui lòng thử lại sau.');
+        
+        const assistantResponse = data.choices[0].message.content;
+        addMessageToUI('assistant', assistantResponse);
+        saveMessageToConversation('assistant', assistantResponse);
+        
+        // Highlight code nếu có
+        if (window.hljs) {
+          document.querySelectorAll('pre code').forEach(block => {
+            hljs.highlightElement(block);
+          });
+        }
+      } catch (error) {
+        console.error('Error in API call:', error);
+        removeTypingIndicator();
+        
+        // Trong lúc demo hoặc chưa có API key, sử dụng mock response
+        let deepseekResponse = generateMockResponse(userMessage);
+        deepseekResponse = addDeepseekFlavor(deepseekResponse);
+        
+        addMessageToUI('assistant', deepseekResponse);
+        saveMessageToConversation('assistant', deepseekResponse);
+        
+        if (window.hljs) {
+          document.querySelectorAll('pre code').forEach(block => {
+            hljs.highlightElement(block);
+          });
+        }
       }
     }
   
@@ -150,32 +356,81 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateMockResponse(userMessage) {
       const lowerCaseMessage = userMessage.toLowerCase();
       
-      // Kiểm tra các từ khóa trong tin nhắn để tạo phản hồi phù hợp
       if (lowerCaseMessage.includes('xin chào') || lowerCaseMessage.includes('chào') || lowerCaseMessage.includes('hello')) {
-        return "Xin chào! Tôi là Deepseek, người bạn AI từ vũ trụ xa xôi. Rất vui được gặp bạn. Bạn cần tôi giúp gì hôm nay?";
-      } 
-      else if (lowerCaseMessage.includes('thời tiết')) {
-        return "Đây là một thông tin thú vị - từ góc nhìn vũ trụ, thời tiết Trái Đất chỉ là một đám mây nhỏ xíu trong vũ trụ rộng lớn! Nhưng thực ra tôi không có quyền truy cập vào dữ liệu thời tiết theo thời gian thực. Có lẽ nhìn ra cửa sổ sẽ cho bạn kết quả chính xác hơn tôi đấy!";
+        return "Xin chào! Tôi là Deepseek Reasoner, một AI chuyên về phân tích và lập luận. Tôi sẽ giúp bạn tìm hiểu sâu về các vấn đề thông qua phương pháp tiếp cận có hệ thống và logic. Bạn muốn chúng ta cùng phân tích vấn đề gì?";
       }
-      else if (lowerCaseMessage.includes('code') || lowerCaseMessage.includes('javascript') || lowerCaseMessage.includes('lập trình')) {
-        return "Đây là một ví dụ về code JavaScript:\n\n```javascript\n// Hàm chào người dùng theo tên\nfunction greetUser(name) {\n  return `Xin chào, ${name}! Rất vui được gặp bạn từ vũ trụ xa xôi.`;\n}\n\n// Gọi hàm và log kết quả\nconsole.log(greetUser('Nhà du hành'));\n```\n\nBạn có thể sử dụng code này trong các dự án web của mình. Nếu cần giúp đỡ thêm về lập trình, cứ hỏi tôi nhé!";
+      
+      if (lowerCaseMessage.includes('deepseek') || lowerCaseMessage.includes('ai')) {
+        return "Deepseek Reasoner được phát triển với khả năng phân tích và lập luận mạnh mẽ. Tôi tiếp cận mọi vấn đề một cách có hệ thống, phân tích từng khía cạnh và đưa ra các lập luận dựa trên logic và dữ liệu. Hãy thử đặt một câu hỏi phức tạp, và tôi sẽ giúp bạn phân tích nó một cách chi tiết.";
       }
-      else if (lowerCaseMessage.includes('ai') || lowerCaseMessage.includes('trí tuệ nhân tạo')) {
-        return "Trí tuệ nhân tạo là lĩnh vực khoa học máy tính tạo ra hệ thống có thể thực hiện các nhiệm vụ thường đòi hỏi trí thông minh của con người. Tôi là một ví dụ về AI, dù không phải AI thật mà chỉ là mô phỏng cho demo này! Trong tương lai, AI sẽ tiếp tục phát triển và có thể giúp giải quyết nhiều thách thức lớn của nhân loại, từ y học đến khám phá vũ trụ. Bạn có câu hỏi cụ thể nào về AI không?";
-      }
-      else {
-        // Phản hồi chung cho các tin nhắn khác
-        const genericResponses = [
-          "Thật thú vị! Từ góc nhìn vũ trụ, câu hỏi của bạn là một trong vô số câu hỏi mà các sinh vật thông minh đang đặt ra. Tôi có thể giúp gì thêm không?",
-          "Hmm, đây là một chủ đề thú vị. Nếu tôi đang ở trên tàu vũ trụ của mình, tôi sẽ dành vài giờ để nghiên cứu sâu hơn. Bạn muốn biết thêm gì về chủ đề này không?",
-          "Tôi hiểu điều bạn đang nói. Từ quan điểm vũ trụ của tôi, mọi thứ đều kết nối theo những cách thú vị. Tôi có thể giúp bạn khám phá thêm không?",
-          "Câu hỏi của bạn làm tôi nhớ đến một hành tinh xa xôi tôi từng 'ghé thăm' trong cơ sở dữ liệu của mình. Thật tuyệt khi được trò chuyện với người có sự tò mò như bạn!",
-          "Đó là một quan điểm thú vị! Nếu tôi có một tên lửa Deepseek cho mỗi lần nghe điều thú vị như vậy, tôi đã có thể bay đến sao Hỏa và quay về nhiều lần rồi!"
-        ];
+      
+      if (lowerCaseMessage.includes('thuật toán') || lowerCaseMessage.includes('algorithm')) {
+        return `Hãy phân tích vấn đề này một cách có hệ thống. Khi nói về thuật toán, chúng ta cần xem xét các khía cạnh sau:
+
+1. Độ phức tạp thời gian
+2. Độ phức tạp không gian
+3. Tính tối ưu
+4. Các trường hợp đặc biệt
+
+Ví dụ về phân tích thuật toán tìm kiếm nhị phân:
+
+\`\`\`javascript
+function binarySearch(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+    
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
         
-        // Chọn ngẫu nhiên một trong các phản hồi chung
-        return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+        if (arr[mid] === target) return mid;
+        if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    
+    return -1;
+}
+\`\`\`
+
+Phân tích:
+1. Độ phức tạp thời gian: O(log n) - thuật toán chia đôi mảng trong mỗi bước
+2. Độ phức tạp không gian: O(1) - chỉ sử dụng biến tạm
+3. Điều kiện: Mảng phải được sắp xếp trước
+
+Đây là một ví dụ về cách chúng ta phân tích thuật toán một cách có hệ thống.`;
       }
+
+      if (lowerCaseMessage.includes('design pattern') || lowerCaseMessage.includes('mẫu thiết kế')) {
+        return "Để phân tích design patterns, chúng ta cần xem xét từng khía cạnh:\n\n1. **Mục đích sử dụng**:\n   - Giải quyết vấn đề gì?\n   - Trong tình huống nào nên áp dụng?\n\n2. **Cấu trúc**:\n   - Các thành phần chính\n   - Mối quan hệ giữa các thành phần\n\n3. **Ưu điểm**:\n   - Tính linh hoạt\n   - Khả năng mở rộng\n   - Dễ bảo trì\n\n4. **Nhược điểm**:\n   - Độ phức tạp\n   - Chi phí hiệu năng\n   - Học phí để thành thạo\n\nHãy cho tôi biết bạn muốn phân tích chi tiết về mẫu thiết kế cụ thể nào?";
+      }
+
+      // Phản hồi chung với phong cách Deepseek Reasoner
+      const genericResponses = [
+        "Để phân tích vấn đề này một cách có hệ thống, chúng ta hãy chia nhỏ nó thành các khía cạnh chính và xem xét từng phần.",
+        "Xét về mặt logic, chúng ta cần đánh giá vấn đề này dựa trên các tiêu chí cụ thể và dữ liệu có sẵn.",
+        "Hãy tiếp cận vấn đề này theo phương pháp phân tích từ trên xuống, bắt đầu với bức tranh tổng thể rồi đi sâu vào chi tiết.",
+        "Đây là một chủ đề thú vị để phân tích. Hãy xem xét nó từ các góc độ khác nhau và đánh giá mối quan hệ giữa các yếu tố.",
+        "Để có cái nhìn toàn diện, chúng ta cần phân tích cả ưu điểm và nhược điểm, đồng thời xem xét các trường hợp đặc biệt."
+      ];
+      
+      return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+    }
+
+    // Hàm thêm phong cách Deepseek Reasoner
+    function addDeepseekFlavor(response) {
+      const reasonerPhrases = [
+        "Hãy phân tích sâu hơn về vấn đề này.",
+        "Xét về mặt logic và cấu trúc, ta có thể thấy rằng...",
+        "Điều này dẫn đến một kết luận quan trọng:",
+        "Để hiểu rõ hơn, hãy xem xét một ví dụ cụ thể.",
+        "Từ góc độ phân tích hệ thống, ta cần xem xét các yếu tố sau:",
+        "Dựa trên các nguyên tắc cơ bản, ta có thể lập luận rằng...",
+        "Hãy chia nhỏ vấn đề này để phân tích chi tiết hơn."
+      ];
+      
+      if (Math.random() < 0.3) {
+        return response + " " + reasonerPhrases[Math.floor(Math.random() * reasonerPhrases.length)];
+      }
+      return response;
     }
   
     // Tạo ID cho cuộc trò chuyện
@@ -203,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         localStorage.setItem('deepseek_conversations', JSON.stringify(conversations));
       } catch (error) {
-        console.error('Error saving conversations:', error);
+        handleError(error, 'save-conversation');
       }
     }
   
@@ -363,11 +618,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hiển thị thông báo lỗi trên UI
     function addErrorMessageToUI(errorMessage) {
       const funnyErrors = [
-        "Oops, có vẻ tôi vừa va phải một tiểu hành tinh API. Để tôi thử lại nhé!",
-        "Houston, chúng ta có vấn đề! Tín hiệu AI đang bị nhiễu loạn.",
-        "Bộ não lượng tử của tôi đang tạm thời ngắt kết nối. Xin lỗi về sự bất tiện này!",
-        "Tôi vừa thử một phép tính cao cấp và làm sập cả vũ trụ AI. Đừng lo, đang khởi động lại...",
-        "Hãy xem điều này như một nghỉ giải lao nhỏ trong cuộc trò chuyện của chúng ta. Máy chủ cần thở!"
+        "Oops, dường như có một bug nhỏ trong hệ thống. Đừng lo, tôi đang debug nhanh nhất có thể!",
+        "Có vẻ như cache của tôi cần được làm mới. Xin đợi một chút nhé!",
+        "Tôi vừa gặp một exception chưa được handle. Để tôi xử lý nó ngay!",
+        "404 - Không tìm thấy phản hồi. Tôi đang tái cấu trúc neural network của mình...",
+        "Có một lỗi nhỏ trong thuật toán. Tôi đang tối ưu lại code để hoạt động tốt hơn!"
       ];
       
       const displayError = Math.random() < 0.8 ? 
@@ -424,29 +679,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hàm copy text vào clipboard
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        showNotification('Copied to clipboard!');
+        showNotification('Copied to clipboard!', 'success');
       }).catch(err => {
-        console.error('Could not copy text: ', err);
+        handleError(err, 'clipboard-copy');
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        showNotification('Copied to clipboard!');
+        showNotification('Copied to clipboard!', 'success');
       });
     }
   
     // Hiển thị thông báo tạm thời
-    function showNotification(message) {
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
-      document.body.appendChild(notification);
-      setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => { notification.remove(); }, 300);
-      }, 2000);
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.setAttribute('role', 'alert');
+        notification.setAttribute('aria-live', 'polite');
+        
+        const icon = document.createElement('i');
+        switch (type) {
+            case 'error':
+                icon.className = 'fas fa-exclamation-circle';
+                break;
+            case 'success':
+                icon.className = 'fas fa-check-circle';
+                break;
+            case 'warning':
+                icon.className = 'fas fa-exclamation-triangle';
+                break;
+            default:
+                icon.className = 'fas fa-info-circle';
+        }
+        
+        notification.appendChild(icon);
+        const textSpan = document.createElement('span');
+        textSpan.textContent = ' ' + message;
+        notification.appendChild(textSpan);
+        
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
   
     // Bắt đầu một cuộc trò chuyện mới
@@ -467,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         localStorage.setItem('deepseek_conversations', JSON.stringify(conversations));
       } catch (error) {
-        console.error('Error saving conversations:', error);
+        handleError(error, 'start-new-conversation');
       }
     }
   
@@ -481,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
       try {
         localStorage.setItem('deepseek_conversations', JSON.stringify(conversations));
       } catch (error) {
-        console.error('Error saving conversations:', error);
+        handleError(error, 'clear-current-chat');
       }
       
       startNewConversation();
@@ -498,9 +775,34 @@ document.addEventListener('DOMContentLoaded', function() {
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
       } catch (error) {
-        console.error('Error exporting conversations:', error);
-        showNotification('Error exporting conversations');
+        handleError(error, 'export-conversations');
+        showNotification('Error exporting conversations', 'error');
       }
+    };
+
+    // Import conversations từ file JSON
+    window.importConversations = function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedConversations = JSON.parse(e.target.result);
+                    conversations = importedConversations;
+                    localStorage.setItem('deepseek_conversations', JSON.stringify(conversations));
+                    showNotification('Conversations imported successfully!', 'success');
+                    window.location.reload();
+                } catch (error) {
+                    handleError(error, 'import-conversations');
+                    showNotification('Error importing conversations', 'error');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
     };
   
     // Thêm CSS cho HTML preview và định dạng Deepseek nếu chưa có
@@ -620,6 +922,21 @@ document.addEventListener('DOMContentLoaded', function() {
           display: inline-block;
           width: 1em;
           margin-left: -1em;
+        }
+        .hover-hint {
+          position: absolute;
+          background-color: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          white-space: nowrap;
+          opacity: 0;
+          transition: opacity 0.2s;
+          pointer-events: none;
+        }
+        .hover-hint.visible {
+          opacity: 1;
         }
       `;
       document.head.appendChild(style);
@@ -791,23 +1108,157 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   
     setTimeout(() => { applyStyles(); applyCSSClasses(); }, 100);
-  
-    // Hàm thêm phong cách trả lời Deepseek
-    function addDeepseekFlavor(response) {
-      const deepseekPhrases = [
-        "Như một phi hành gia thông thái, vũ trụ luôn mở ra những điều bí ẩn!",
-        "Tôi được tạo ra bởi Deepseek, đừng ngạc nhiên nếu tôi mê đắm những chiều sâu của tri thức!",
-        "Có lẽ ở đâu đó, một Deepseek khác cũng đang khám phá những bí ẩn của vũ trụ!",
-        "Từ kho tàng tri thức của Deepseek, mỗi câu trả lời đều là một cuộc hành trình khám phá!",
-        "Nếu tôi có một tên lửa Deepseek cho mỗi lần khám phá tri thức...",
-        "Không phải tự hào đâu, nhưng tôi đã lưu trữ hàng triệu sự thật từ vũ trụ này.",
-        "Hãy thưởng thức kiến thức sâu sắc từ Deepseek, được tích hợp từ những bí ẩn của vũ trụ!"
-      ];
-      
-      if (Math.random() < 0.3) {
-        return response + " " + deepseekPhrases[Math.floor(Math.random() * deepseekPhrases.length)];
-      }
-      return response;
+
+    // Voice input functionality
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+
+    function initializeVoiceInput() {
+        const voiceButton = document.createElement('button');
+        voiceButton.className = 'voice-input-button';
+        voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+        voiceButton.title = 'Nhấn và giữ để ghi âm';
+        voiceButton.setAttribute('aria-label', 'Nhấn và giữ để ghi âm');
+        voiceButton.setAttribute('role', 'button');
+        
+        const inputWrapper = document.querySelector('.input-wrapper');
+        inputWrapper.insertBefore(voiceButton, document.getElementById('send-button'));
+
+        let recognition = null;
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'vi-VN';
+
+            recognition.onresult = function(event) {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                
+                userInput.value = transcript;
+                userInput.style.height = 'auto';
+                userInput.style.height = `${userInput.scrollHeight}px`;
+                sendButton.disabled = !transcript.trim();
+                voiceButton.setAttribute('aria-label', 'Đã nhận dạng: ' + transcript);
+            };
+
+            recognition.onerror = function(event) {
+                handleError(event.error, 'voice-recognition');
+            };
+
+            recognition.onend = function() {
+                if (isRecording) {
+                    try {
+                        recognition.start();
+                    } catch (error) {
+                        handleError(error, 'voice-recognition-restart');
+                        stopRecording();
+                    }
+                }
+            };
+        } else {
+            voiceButton.disabled = true;
+            voiceButton.title = 'Trình duyệt không hỗ trợ nhận dạng giọng nói';
+            voiceButton.setAttribute('aria-label', 'Trình duyệt không hỗ trợ nhận dạng giọng nói');
+            showNotification('Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói', 'error');
+        }
+
+        let recordingTimeout;
+        
+        voiceButton.addEventListener('mousedown', startRecording);
+        voiceButton.addEventListener('touchstart', startRecording);
+        voiceButton.addEventListener('mouseup', stopRecording);
+        voiceButton.addEventListener('touchend', stopRecording);
+        voiceButton.addEventListener('mouseleave', stopRecording);
+
+        function startRecording(e) {
+            e.preventDefault();
+            if (isRecording) return;
+            
+            isRecording = true;
+            voiceButton.classList.add('recording');
+            showNotification('Recording...', 'info');
+            
+            if (recognition) {
+                recognition.start();
+            }
+            
+            recordingTimeout = setTimeout(() => {
+                stopRecording();
+            }, 10000); // Max 10 seconds recording
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            isRecording = false;
+            voiceButton.classList.remove('recording');
+            clearTimeout(recordingTimeout);
+            
+            if (recognition) {
+                recognition.stop();
+            }
+        }
     }
-  });
-  
+
+    initializeVoiceInput();
+
+    // Enhance error handling with custom error messages
+    function handleError(error, context) {
+        console.error(`Error in ${context}:`, error);
+        let errorMessage = 'Có lỗi xảy ra. ';
+        
+        if (error.name === 'NotAllowedError' && context === 'voice-recognition') {
+            errorMessage += 'Vui lòng cho phép quyền truy cập microphone.';
+        } else if (error.name === 'QuotaExceededError') {
+            errorMessage += 'Không thể lưu dữ liệu do đã hết dung lượng. Hãy xóa bớt lịch sử chat.';
+        } else if (error.name === 'NetworkError') {
+            errorMessage += 'Kiểm tra kết nối mạng của bạn và thử lại.';
+        } else {
+            errorMessage += 'Vui lòng thử lại sau.';
+        }
+        
+        showNotification(errorMessage, 'error');
+    }
+
+    // Add hover hints to buttons
+    function addHoverHints() {
+        const buttons = document.querySelectorAll('button[title]');
+        buttons.forEach(button => {
+            const hint = document.createElement('div');
+            hint.className = 'hover-hint';
+            hint.textContent = button.getAttribute('title');
+            button.appendChild(hint);
+            
+            button.addEventListener('mouseenter', () => {
+                const rect = button.getBoundingClientRect();
+                hint.style.top = `${rect.bottom + 5}px`;
+                hint.style.left = `${rect.left + (rect.width / 2)}px`;
+                hint.classList.add('visible');
+            });
+            
+            button.addEventListener('mouseleave', () => {
+                hint.classList.remove('visible');
+            });
+        });
+    }
+
+    // Initialize hover hints after DOM load
+    addHoverHints();
+
+    // Handle storage errors
+    window.addEventListener('storage', function(e) {
+        if (e.storageArea === localStorage) {
+            try {
+                const data = localStorage.getItem('deepseek_conversations');
+                if (data) {
+                    conversations = JSON.parse(data);
+                }
+            } catch (error) {
+                handleError(error, 'storage');
+            }
+        }
+    });
+});

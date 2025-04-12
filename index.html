@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deepseek AI - Người bạn từ vũ trụ xa xôi</title>
+  <title>Deepseek Reasoner - Trợ lý AI với khả năng phân tích và lập luận xuất sắc</title>
   <!-- Link tới file CSS của bạn -->
   <link rel="stylesheet" href="styles.css">
   <!-- FontAwesome cho icon -->
@@ -25,75 +25,151 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/sql.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
-  <link rel="icon" href="images/user.jpg" type="image/jgp" sizes="64x64">
+  <link rel="icon" href="images/user.jpg" type="image/jpeg" sizes="64x64">
 
 </head>
 <body>
+  <a href="#chat-messages" class="skip-link">Chuyển đến tin nhắn</a>
+  <a href="#user-input" class="skip-link">Chuyển đến ô nhập liệu</a>
   <div class="app-container">
+    <div aria-live="polite" class="sr-announcer" role="status"></div>
     <div class="main-content full-width">
-      <div class="main-header">
+      <div class="main-header" role="banner">
         <div class="app-title">
-          <span><a href="https://github.com/Hayato-shino05" target="_blank" rel="noopener noreferrer">Hayato_shino05</a></span>
+          <span><a href="https://github.com/Hayato-shino05" target="_blank" rel="noopener noreferrer" aria-label="Visit GitHub profile">Hayato_shino05</a></span>
         </div>
-        <button id="clear-chat-button" title="Xóa cuộc trò chuyện" onclick="clearCurrentChat()">
-          <i class="fas fa-trash"></i> Xóa chat
-        </button>
-        <button id="theme-toggle" class="theme-toggle">
-          <i class="fas fa-moon"></i>
-        </button>
+        <div class="header-actions" role="toolbar" aria-label="Chat controls">
+          <div class="keyboard-shortcuts">
+            <button class="action-button" id="show-shortcuts" aria-label="Show keyboard shortcuts">
+              <i class="fas fa-keyboard" aria-hidden="true"></i> Phím tắt
+            </button>
+          </div>
+          <button id="export-button" class="action-button" aria-label="Export conversations">
+            <i class="fas fa-download" aria-hidden="true"></i> Xuất
+          </button>
+          <button id="import-button" class="action-button" aria-label="Import conversations">
+            <i class="fas fa-upload" aria-hidden="true"></i> Nhập
+          </button>
+          <button id="clear-chat-button" aria-label="Clear conversation">
+            <i class="fas fa-trash" aria-hidden="true"></i> Xóa chat
+          </button>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
-      <div class="chat-container">
+      <!-- Keyboard shortcuts modal -->
+      <div class="shortcuts-modal" id="shortcuts-modal">
+        <div class="shortcuts-content">
+          <h2>Phím tắt</h2>
+          <div class="shortcuts-list">
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Enter</kbd></span>
+              <span class="shortcut-desc">Gửi tin nhắn</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Shift</kbd> + <kbd>Enter</kbd></span>
+              <span class="shortcut-desc">Xuống dòng</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+              <span class="shortcut-desc">Gửi tin nhắn (bỏ qua Shift)</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>↑</kbd></span>
+              <span class="shortcut-desc">Sửa tin nhắn cuối</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>K</kbd></span>
+              <span class="shortcut-desc">Xóa ô nhập liệu</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Alt</kbd> + <kbd>N</kbd></span>
+              <span class="shortcut-desc">Tạo cuộc trò chuyện mới</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>/</kbd></span>
+              <span class="shortcut-desc">Chuyển đổi theme</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>L</kbd></span>
+              <span class="shortcut-desc">Xóa cuộc trò chuyện</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>S</kbd></span>
+              <span class="shortcut-desc">Xuất cuộc trò chuyện</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>O</kbd></span>
+              <span class="shortcut-desc">Nhập cuộc trò chuyện</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>Esc</kbd></span>
+              <span class="shortcut-desc">Đóng hộp thoại</span>
+            </div>
+          </div>
+          <button class="close-modal">Đóng</button>
+        </div>
+      </div>
+      <div class="chat-container" role="main">
         <!-- Welcome screen -->
-        <div class="welcome-screen" id="welcome-screen">
-          <h1>Deepseek – Người bạn từ vũ trụ xa xôi</h1>
-          <p>Xin chào! Tôi là Deepseek, được tạo ra bởi xAI, mượn chút dữ liệu để trò chuyện cùng bạn. Hãy xem tôi như một phi hành gia AI, lạc giữa các vì sao, sẵn sàng giúp bạn từ debug code đến khám phá bí mật vũ trụ – kèm chút hài hước để không ai buồn ngủ!</p>
+        <div class="welcome-screen" id="welcome-screen" role="region" aria-label="Welcome message">
+          <h1>Deepseek Reasoner – Trí tuệ nhân tạo với tư duy logic sắc bén</h1>
+          <p>Xin chào! Tôi là Deepseek Reasoner, một AI được phát triển với khả năng phân tích và lập luận xuất sắc. Với tư duy logic sắc bén và phương pháp tiếp cận có hệ thống, tôi sẽ giúp bạn hiểu sâu hơn về mọi vấn đề, từ khoa học máy tính, toán học cho đến các bài toán thực tế.</p>
           <div class="example-prompts">
             <div class="example-row">
-              <button class="example-button" data-prompt="Nếu tôi du hành vượt thời gian về năm 3000, thế giới sẽ trông như thế nào?">
-                <i class="fas fa-lightbulb"></i>
+              <button class="example-button" data-prompt="Phân tích độ phức tạp thời gian và không gian của thuật toán sắp xếp Quick Sort">
+                <i class="fas fa-microchip"></i>
                 <div>
-                  <h3>Thế giới năm 3000</h3>
-                  <p>Tưởng tượng từ góc nhìn du hành thời gian</p>
+                  <h3>Phân tích thuật toán</h3>
+                  <p>Đánh giá chi tiết về độ phức tạp</p>
                 </div>
               </button>
-              <button class="example-button" data-prompt="Lên kế hoạch chinh phục sao Hỏa cho một nhóm bạn – đừng quên phi thuyền và cà phê!">
-                <i class="fas fa-rocket"></i>
+              <button class="example-button" data-prompt="Giải thích nguyên lý hoạt động của các design pattern phổ biến trong lập trình hướng đối tượng">
+                <i class="fas fa-sitemap"></i>
                 <div>
-                  <h3>Chinh phục sao Hỏa</h3>
-                  <p>Kế hoạch vui vẻ cho nhóm bạn</p>
+                  <h3>Design Patterns</h3>
+                  <p>Phân tích các mẫu thiết kế OOP</p>
                 </div>
               </button>
             </div>
             <div class="example-row">
-              <button class="example-button" data-prompt="Viết một câu chuyện ngắn về phi hành gia lạc vào hành tinh toàn robot hài hước.">
-                <i class="fas fa-feather-alt"></i>
+              <button class="example-button" data-prompt="So sánh và phân tích ưu nhược điểm của các cấu trúc dữ liệu khác nhau trong việc xử lý dữ liệu lớn">
+                <i class="fas fa-database"></i>
                 <div>
-                  <h3>Câu chuyện phi hành gia</h3>
-                  <p>Gặp đám robot siêu dí dỏm</p>
+                  <h3>Cấu trúc dữ liệu</h3>
+                  <p>So sánh hiệu suất xử lý</p>
                 </div>
               </button>
-              <button class="example-button" data-prompt="Tính quỹ đạo để ném một quả bóng từ Trái Đất lên Mặt Trăng – đùa thôi, nhưng thử xem!">
-                <i class="fas fa-globe"></i>
+              <button class="example-button" data-prompt="Phân tích các nguyên tắc SOLID trong lập trình và cách áp dụng chúng một cách hiệu quả">
+                <i class="fas fa-code"></i>
                 <div>
-                  <h3>Quỹ đạo bóng vũ trụ</h3>
-                  <p>Tính toán vui vẻ kiểu Deepseek</p>
+                  <h3>Nguyên tắc SOLID</h3>
+                  <p>Hướng dẫn thiết kế code chất lượng</p>
                 </div>
               </button>
             </div>
           </div>
         </div>
         <!-- Chat messages -->
-        <div class="chat-messages" id="chat-messages">
+        <div class="chat-messages" id="chat-messages" role="log" aria-label="Chat messages" aria-live="polite">
           <!-- Tin nhắn sẽ được chèn vào đây -->
         </div>
         <!-- Input area -->
-        <div class="chat-input-container">
+        <div class="chat-input-container" role="form" aria-label="Message input">
           <div class="input-wrapper">
-            <textarea id="user-input" placeholder="Hỏi tôi gì cũng được – từ hố đen đến cách sống sót trên sao Hỏa!" rows="1"></textarea>
-            <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+            <textarea id="user-input" 
+              placeholder="Hãy đặt câu hỏi về bất kỳ vấn đề nào - tôi sẽ phân tích và giải thích một cách logic!"
+              rows="1" 
+              aria-label="Type your message"
+              role="textbox"
+              aria-multiline="true"></textarea>
+            <button id="send-button" aria-label="Send message">
+              <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            </button>
           </div>
-          <div class="disclaimer">
-            Tôi là Deepseek, nên đôi khi câu trả lời có thể hơi "vượt không gian". Kiểm tra kỹ nhé, và đừng hỏi tôi ai xứng đáng bị gì – tôi không phải quan tòa đâu!
+          <div class="disclaimer" role="note">
+            Tôi là Deepseek Reasoner, một AI được tạo ra để phân tích và lập luận. Mặc dù tôi cố gắng đưa ra các phân tích chính xác và logic nhất, bạn nên kiểm chứng kỹ và sử dụng chúng một cách phù hợp nhé!
           </div>
         </div>
       </div>
