@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const avatarDiv = document.createElement('div');
       avatarDiv.className = 'message-avatar';
-      avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+      avatarDiv.innerHTML = '<img src="images/deepseek-logo.svg" alt="DeepSeek" class="avatar-image">';
       
       const contentDiv = document.createElement('div');
       contentDiv.className = 'message-content';
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (role === 'user') {
         avatarDiv.innerHTML = '<img src="images/user.jpg" alt="User" class="avatar-image">';
       } else {
-        avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+        avatarDiv.innerHTML = '<img src="images/deepseek-logo.svg" alt="DeepSeek" class="avatar-image">';
       }
   
       const contentDiv = document.createElement('div');
@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
       const avatarDiv = document.createElement('div');
       avatarDiv.className = 'message-avatar';
-      avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+      avatarDiv.innerHTML = '<img src="images/deepseek-logo.svg" alt="DeepSeek" class="avatar-image">';
   
       const contentDiv = document.createElement('div');
       contentDiv.className = 'message-content';
@@ -1102,52 +1102,122 @@ document.addEventListener('DOMContentLoaded', function() {
     function addStylesForHTMLPreview() {
       const style = document.createElement('style');
       style.textContent = `
-        .rendered-html-preview {
-          margin-top: 16px;
-          border-top: 1px solid var(--border-color);
-          padding-top: 16px;
+        /* Improved message styling */
+        .message {
+          display: flex;
+          margin-bottom: 16px;
+          border-radius: 12px;
+          transition: transform 0.3s ease, opacity 0.3s ease;
+          position: relative;
         }
-        .preview-header {
-          font-weight: 600;
-          margin-bottom: 8px;
-          color: var(--primary-color);
+        
+        /* Streaming content style */
+        .streaming-message {
+          animation: deepseekPulse 2s infinite;
         }
-        .preview-content {
-          background: white;
+        
+        @keyframes deepseekPulse {
+          0% { box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.2); }
+          70% { box-shadow: 0 0 0 8px rgba(var(--primary-rgb), 0); }
+          100% { box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0); }
+        }
+        
+        /* Enhanced typing indicator */
+        .typing-indicator {
+          display: flex;
+          gap: 5px;
+          padding: 8px 16px;
+          align-items: center;
+        }
+        
+        .typing-dot {
+          width: 8px;
+          height: 8px;
+          background-color: var(--primary-color);
+          border-radius: 50%;
+          animation: deepseekBounce 1.5s infinite ease-in-out;
+        }
+        
+        @keyframes deepseekBounce {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-8px); }
+          60% { transform: translateY(-4px); }
+        }
+        
+        /* Improved notification */
+        .notification {
+          padding: 12px 16px;
           border-radius: 8px;
-          overflow: hidden;
-          margin-top: 8px;
+          background-color: var(--chat-bg);
+          border-left: 4px solid var(--primary-color);
+          color: var(--text-dark);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          max-width: 300px;
+          z-index: 1000;
         }
-        .code-block {
-          background-color: var(--code-bg);
-          padding: 12px;
-          border-radius: 0 0 8px 8px;
-          overflow-x: auto;
-          font-family: 'Fira Code', 'Consolas', monospace;
-          margin: 0;
-          font-size: 14px;
-          white-space: pre-wrap;
-          counter-reset: line;
+        
+        .notification.success {
+          border-color: #4CAF50;
         }
+        
+        .notification.success i {
+          color: #4CAF50;
+        }
+        
+        .notification.error {
+          border-color: #F44336;
+        }
+        
+        .notification.error i {
+          color: #F44336;
+        }
+        
+        .notification i {
+          font-size: 18px;
+        }
+        
+        /* Fade out animation */
+        .fade-out {
+          opacity: 0 !important;
+          transform: translateY(10px) !important;
+        }
+        
+        /* Enhanced code block styling */
         .code-container {
           margin: 16px 0;
           border-radius: 8px;
           border: 1px solid var(--border-color);
           overflow: hidden;
+          background-color: var(--code-bg);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          transition: box-shadow 0.3s ease;
         }
+        
+        .code-container:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
         .code-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background-color: rgba(0,0,0,0.05);
+          background-color: rgba(0,0,0,0.1);
           padding: 8px 12px;
           font-size: 12px;
           border-bottom: 1px solid var(--border-color);
         }
+        
         .code-language {
           font-weight: 600;
           color: var(--text-dark);
+          background-color: rgba(var(--primary-rgb), 0.1);
+          padding: 2px 8px;
+          border-radius: 4px;
         }
+        
         .copy-code-button {
           background: transparent;
           border: none;
@@ -1159,62 +1229,140 @@ document.addEventListener('DOMContentLoaded', function() {
           gap: 4px;
           padding: 4px 8px;
           border-radius: 4px;
+          transition: background-color 0.2s ease;
         }
-        .copy-code-button:hover { background-color: rgba(0,0,0,0.1); }
-        .gemini-style-message { line-height: 1.6; }
-        .gemini-style-message p { margin-bottom: 16px; }
-        .quote-block {
+        
+        .copy-code-button:hover {
+          background-color: rgba(var(--primary-rgb), 0.1);
+        }
+        
+        pre {
+          margin: 0;
+          position: relative;
+        }
+        
+        pre code {
+          font-family: 'Fira Code', 'Consolas', monospace;
+          font-size: 14px;
+          line-height: 1.5;
+          padding: 12px !important;
+          border-radius: 0 0 8px 8px;
+          tab-size: 2;
+        }
+        
+        /* Line numbers for code */
+        .with-line-numbers {
           display: flex;
-          margin: 16px 0;
-          padding-left: 0;
+          overflow-x: auto;
         }
-        .quote-line {
-          width: 2px;
-          background-color: var(--border-color);
-          margin-right: 16px;
-        }
-        .quote-content { color: var(--text-dark); }
-        .content-divider {
-          border: none;
-          height: 1px;
-          background-color: var(--border-color);
-          margin: 24px 0;
-        }
-        .checklist-item {
+        
+        .line-numbers {
           display: flex;
-          align-items: flex-start;
-          margin-bottom: 8px;
-          gap: 8px;
+          flex-direction: column;
+          padding: 12px 8px;
+          background-color: rgba(0,0,0,0.05);
+          border-right: 1px solid var(--border-color);
+          color: #888;
+          text-align: right;
+          user-select: none;
+          font-size: 14px;
+          font-family: 'Fira Code', 'Consolas', monospace;
+          min-width: 40px;
         }
-        .checkbox-checked, .checkbox-unchecked {
-          width: 20px;
-          height: 20px;
-          border: 1px solid var(--border-color);
-          border-radius: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
+        
+        .line-number {
+          padding: 0 4px;
+          line-height: 1.5;
         }
-        .checkbox-checked {
-          background-color: var(--primary-color);
-          border-color: var(--primary-color);
-        }
-        .checkmark {
-          color: white;
+        
+        /* Message notice styling */
+        .message-notice {
+          text-align: center;
+          padding: 8px 16px;
+          margin: 8px 0;
+          background-color: rgba(var(--primary-rgb), 0.1);
+          border-radius: 8px;
           font-size: 12px;
-          display: none;
+          color: var(--text-dark);
         }
-        .checkmark.visible { display: block; }
-        ul { padding-left: 24px; margin: 16px 0; }
-        li { margin-bottom: 8px; }
-        li:before {
-          content: "•";
-          color: var(--primary-color);
-          font-weight: bold;
-          display: inline-block;
-          width: 1em;
-          margin-left: -1em;
+        
+        /* Error message styling */
+        .error-message {
+          background-color: rgba(244, 67, 54, 0.05);
+          border-left: 4px solid #F44336;
+          padding: 12px;
+        }
+        
+        .error-message .message-avatar i {
+          color: #F44336;
+          font-size: 24px;
+        }
+        
+        .retry-button {
+          margin-top: 8px;
+          padding: 6px 12px;
+          border: none;
+          background-color: #F44336;
+          color: white;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          transition: background-color 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        
+        .retry-button:hover {
+          background-color: #D32F2F;
+        }
+        
+        /* Pulse animation for icons */
+        .pulse {
+          animation: deepseekPulseAnimation 2s infinite;
+        }
+        
+        @keyframes deepseekPulseAnimation {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
+        
+        /* Mobile view optimizations */
+        @media (max-width: 768px) {
+          .mobile-view .message {
+            margin-bottom: 12px;
+          }
+          
+          .mobile-view .message-content {
+            font-size: 14px;
+          }
+          
+          .mobile-view .copy-code-button span {
+            display: none;
+          }
+          
+          .mobile-view .code-container {
+            margin: 12px 0;
+          }
+          
+          .mobile-view .notification {
+            max-width: 90%;
+            left: 5%;
+            right: 5%;
+          }
+        }
+        
+        /* Animations for messages */
+        .message-enter {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        
+        .message-enter-active {
+          opacity: 1;
+          transform: translateY(0);
+          transition: opacity 300ms, transform 300ms;
         }
       `;
       document.head.appendChild(style);
