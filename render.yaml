@@ -3,7 +3,7 @@ static:
     build:
       cmd: npm install && npm run build
     environment:
-      - key: GEMINI_API_KEY
+      - key: API_KEY
     routes:
       - type: rewrite
         source: /*

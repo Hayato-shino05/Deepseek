@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatContainer = document.querySelector('.chat-container');
   
     // DeepSeek API Configuration (from r1.py)
-    const API_KEY = "d81f926b-3af8-4e0a-ab35-c4b00935c85c"; // Đặt lại API key
+    const API_KEY = process.env.API_KEY || "fallback_key_if_needed";
     const BASE_URL = "ark.ap-southeast.bytepluses.com";
     const API_PATH = "/api/v3/chat/completions";
     const MODEL_ID = "ep-20250408134926-wr5rk"; // r1 model from DeepSeek
