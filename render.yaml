@@ -1,11 +1,9 @@
-services:
-  - type: web
-    name: deepseek-chat
-    runtime: php
-    buildCommand: npm install && npm run build
-    startCommand: php -S 0.0.0.0:$PORT
-    envVarGroups:
-      - name: Deepseek_API
+static:
+  - name: grok3
+    build:
+      cmd: npm install && npm run build
+    environment:
+      - key: API_KEY
     routes:
       - type: rewrite
         source: /*

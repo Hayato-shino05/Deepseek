@@ -7,9 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const exampleButtons = document.querySelectorAll('.example-button');
     const chatContainer = document.querySelector('.chat-container');
   
-    // DeepSeek API Configuration - thay thế bằng proxy
-    const API_PROXY = "/proxy.php";
-    const MODEL_ID = "ep-20250408134926-wr5rk"; // r1 model from DeepSeek
+    // DeepSeek API Configuration (from r1.py)
+    const API_KEY = "d81f926b-3af8-4e0a-ab35-c4b00935c85c"; // Đặt lại API key
+    const BASE_URL = "ark.ap-southeast.bytepluses.com";
+    const API_PATH = "/api/v3/chat/completions";
+    const MODEL_ID = "ep-20250408134926-wr5rk"; 
   
     // DeepSeek Prompts tối ưu với tính cách Trung Hoa
     const SYSTEM_PROMPTS = {
