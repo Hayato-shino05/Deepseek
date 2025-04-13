@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const avatarDiv = document.createElement('div');
       avatarDiv.className = 'message-avatar';
-      avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+      avatarDiv.innerHTML = '<img src="images/deepseek-drak.svg" alt="DeepSeek" class="avatar-image">';
       
       const contentDiv = document.createElement('div');
       contentDiv.className = 'message-content';
@@ -717,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (role === 'user') {
         avatarDiv.innerHTML = '<img src="images/user.jpg" alt="User" class="avatar-image">';
       } else {
-        avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+        avatarDiv.innerHTML = '<img src="images/deepseek-drak.svg" alt="DeepSeek" class="avatar-image">';
       }
   
       const contentDiv = document.createElement('div');
@@ -849,7 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
       const avatarDiv = document.createElement('div');
       avatarDiv.className = 'message-avatar';
-      avatarDiv.innerHTML = '<img src="images/grok-light.svg" alt="DeepSeek" class="avatar-image">';
+      avatarDiv.innerHTML = '<img src="images/deepseek-drak.svg" alt="DeepSeek" class="avatar-image">';
   
       const contentDiv = document.createElement('div');
       contentDiv.className = 'message-content';
