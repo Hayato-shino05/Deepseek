@@ -4,9 +4,8 @@ services:
     runtime: php
     buildCommand: npm install && npm run build
     startCommand: php -S 0.0.0.0:$PORT
-    envVars:
-      - key: API_KEY
-        sync: false
+    envVarGroups:
+      - name: Deepseek_API
     routes:
       - type: rewrite
         source: /*
