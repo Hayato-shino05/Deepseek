@@ -39,7 +39,7 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.API_KEY': JSON.stringify(process.env.API_KEY )
+      'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY || 'AIzaSyA9DlPYg63obDknov-nPkwGmcGHt4zA6gI')
     }),
     new WebpackObfuscator({
       rotateStringArray: true,
