@@ -7,10 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const exampleButtons = document.querySelectorAll('.example-button');
     const chatContainer = document.querySelector('.chat-container');
   
-    // DeepSeek API Configuration (from r1.py)
-    const API_KEY = process.env.API_KEY || "fallback_key_if_needed";
-    const BASE_URL = "ark.ap-southeast.bytepluses.com";
-    const API_PATH = "/api/v3/chat/completions";
+    // DeepSeek API Configuration - thay thế bằng proxy
+    const API_PROXY = "/proxy.php";
     const MODEL_ID = "ep-20250408134926-wr5rk"; // r1 model from DeepSeek
   
     // DeepSeek Prompts tối ưu với tính cách Trung Hoa
@@ -273,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   
-    // Send message to DeepSeek API - Hỗ trợ streaming
+    // Send message to DeepSeek API - Sửa đổi để sử dụng proxy
     async function sendMessageToDeepSeek(userMessage) {
       try {
         const currentConversation = getCurrentConversation();
@@ -317,12 +315,11 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.appendChild(streamContainer);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Send request to DeepSeek API
-        const response = await fetch(`https://${BASE_URL}${API_PATH}`, {
+        // Send request to proxy instead of directly to DeepSeek API
+        const response = await fetch(API_PROXY, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(requestData)
         });

@@ -1,9 +1,12 @@
-static:
-  - name: grok3
-    build:
-      cmd: npm install && npm run build
-    environment:
+services:
+  - type: web
+    name: deepseek-chat
+    runtime: php
+    buildCommand: npm install && npm run build
+    startCommand: php -S 0.0.0.0:$PORT
+    envVars:
       - key: API_KEY
+        sync: false
     routes:
       - type: rewrite
         source: /*
