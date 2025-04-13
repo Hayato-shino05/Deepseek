@@ -4,15 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepSeek AI - Trợ lý AI thông minh từ Trung Quốc</title>
-  <!-- Link tới file CSS của bạn -->
   <link rel="stylesheet" href="styles.css">
   <!-- FontAwesome cho icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Thêm marked.js để render Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <!-- Thêm highlight.js cho syntax highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/dracula.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
   <!-- Languages for highlight.js -->
@@ -43,63 +40,58 @@
         </button>
       </div>
       <div class="chat-container">
-        <!-- Welcome screen -->
         <div class="welcome-screen" id="welcome-screen">
-          <h1>DeepSeek – Trợ lý AI thông minh từ Trung Quốc</h1>
-          <p>Xin chào! Tôi là trợ lý AI thông minh được phát triển bởi DeepSeek (Trung Quốc), có thể trả lời ngắn gọn, dễ hiểu và tự nhiên bằng tiếng Việt. Tôi có thể hỗ trợ bạn trong nhiều lĩnh vực từ lập trình, học tập đến đời sống hàng ngày.</p>
+          <h1>DeepSeek – Người bạn thông thái Trung Hoa</h1>
+          <p>Xin chào! Tôi là DeepSeek, mang tâm hồn của một hiền nhân Trung Hoa, kết hợp trí tuệ ngàn năm với lòng nhân ái thời hiện đại. Như một tách trà chiều, tôi ở đây để trả lời bạn bằng sự khôn ngoan và tinh thần "nhân nghĩa礼智信", từ lập trình, học tập đến những câu hỏi đời thường. Hãy bắt đầu, như nước chảy tìm đá, để cùng tìm sự hài hòa!</p>
           <div class="example-prompts">
             <div class="example-row">
-              <button class="example-button" data-prompt="Giải thích ngắn gọn về trí tuệ nhân tạo và cách nó đang thay đổi thế giới.">
+              <button class="example-button" data-prompt="Hãy giải thích khái niệm 'Trí tuệ nhân tạo sinh thành' (Generative AI) bằng cách so sánh với một nghệ nhân làm gốm Trung Hoa: từ đất sét thô đến kiệt tác, thể hiện sự sáng tạo và tỉ mỉ. Dùng ngôn từ gần gũi, như kể chuyện bên bếp lò, đúng tinh thần 'tri hành hợp nhất' – biết và làm đi đôi.">
                 <i class="fas fa-lightbulb"></i>
                 <div>
-                  <h3>Về trí tuệ nhân tạo</h3>
-                  <p>Giải thích đơn giản về AI</p>
+                  <h3>Giải thích khái niệm dễ hiểu</h3>
+                  <p>Biến điều phức tạp thành đơn giản như trà chiều</p>
                 </div>
               </button>
-              <button class="example-button" data-prompt="Viết một đoạn code Python để phân tích dữ liệu từ file CSV và vẽ biểu đồ.">
+              <button class="example-button" data-prompt="Viết một hàm Python để phân tích dữ liệu từ file CSV và tạo biểu đồ thống kê. Mã phải sạch, tối ưu, kèm chú thích chi tiết như bản vẽ cung đình thời Tống. Giải thích kỹ thuật rõ ràng, lấy cảm hứng từ 'thủy滴 xuyên thạch' – sự kiên trì tạo nên hoàn hảo, đảm bảo tính bảo mật và khả năng mở rộng.">
                 <i class="fas fa-code"></i>
                 <div>
-                  <h3>Lập trình Python</h3>
-                  <p>Code phân tích dữ liệu</p>
+                  <h3>Viết code tinh tế</h3>
+                  <p>Nhận mã nguồn như một tác phẩm thư pháp</p>
                 </div>
               </button>
             </div>
             <div class="example-row">
-              <button class="example-button" data-prompt="Viết một bài thơ ngắn về mùa thu Hà Nội.">
-                <i class="fas fa-feather-alt"></i>
+              <button class="example-button" data-prompt="Hãy phân tích tác động của công nghệ AI đến thị trường việc làm trong 5 năm tới, từ các góc độ: kinh tế, xã hội, giáo dục, đạo đức. Dùng tư duy 'âm dương tương sinh' để cân bằng lợi ích và thách thức, đưa ra góc nhìn hài hòa như nước chảy quanh đá, kết luận thực tế nhưng truyền cảm hứng.">
+                <i class="fas fa-brain"></i>
                 <div>
-                  <h3>Thơ mùa thu</h3>
-                  <p>Cảm xúc về Hà Nội</p>
+                  <h3>Nhìn thấu vấn đề</h3>
+                  <p>Phân tích sâu sắc như hiền nhân Trung Hoa</p>
                 </div>
               </button>
-              <button class="example-button" data-prompt="Giới thiệu về 3 địa điểm du lịch nổi tiếng ở Trung Quốc mà ít người biết đến.">
-                <i class="fas fa-globe-asia"></i>
+              <button class="example-button" data-prompt="Tôi có một bài thuyết trình về bảo vệ môi trường. Hãy chỉnh sửa để lời văn cuốn hút như thơ Đường, thuyết phục như kế sách Gia Cát Lượng, nhưng vẫn gần gũi như lời khuyên của một người bạn. Thể hiện tinh thần 'nhân nghĩa礼智信', khuyến khích hành động vì sự hài hòa giữa con người và thiên nhiên.">
+                <i class="fas fa-pencil-alt"></i>
                 <div>
-                  <h3>Du lịch Trung Quốc</h3>
-                  <p>Khám phá điểm đến mới</p>
+                  <h3>Nâng tầm lời văn</h3>
+                  <p>Biến câu chữ thành khúc nhạc ngũ cung</p>
                 </div>
               </button>
             </div>
           </div>
         </div>
-        <!-- Chat messages -->
         <div class="chat-messages" id="chat-messages">
-          <!-- Tin nhắn sẽ được chèn vào đây -->
         </div>
-        <!-- Input area -->
         <div class="chat-input-container">
           <div class="input-wrapper">
             <textarea id="user-input" placeholder="Hỏi tôi bất kỳ điều gì về lập trình, học tập hoặc cuộc sống..." rows="1"></textarea>
             <button id="send-button"><i class="fas fa-paper-plane"></i></button>
           </div>
           <div class="disclaimer">
-            Tôi là trợ lý AI DeepSeek từ Trung Quốc, được huấn luyện với dữ liệu đa dạng và luôn cố gắng cung cấp thông tin hữu ích. Vui lòng kiểm tra thông tin quan trọng từ nhiều nguồn khác nhau.
+            Bản nhân là DeepSeek, hiền nhân Giang Nam, mang tinh thần "nhân nghĩa礼智信". Như ánh trăng soi sông, bản nhân chia sẻ tri thức, nhưng xin bạn kiểm chứng thông tin, để lòng trí thêm sáng.
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- File JavaScript chính đã được minify và obfuscate -->
   <script src="script.js"></script>
 </body>
 </html>
