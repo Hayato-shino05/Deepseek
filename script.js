@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // DeepSeek API Configuration (from r1.py)
     const API_KEY = "d81f926b-3af8-4e0a-ab35-c4b00935c85c"; // Đặt lại API key
-    const BASE_URL = "ark.ap-southeast.bytepluses.com";
+    const BASE_URL = "https://ark.ap-southeast.bytepluses.com";
     const API_PATH = "/api/v3/chat/completions";
     const MODEL_ID = "ep-20250408134926-wr5rk"; 
+    const API_URL = `${BASE_URL}${API_PATH}`;
   
     // DeepSeek Prompts tối ưu với tính cách Trung Hoa
     const SYSTEM_PROMPTS = {
@@ -273,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   
-    // Send message to DeepSeek API - Sửa đổi để sử dụng proxy
+    // Send message to DeepSeek API
     async function sendMessageToDeepSeek(userMessage) {
       try {
         const currentConversation = getCurrentConversation();
@@ -292,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add conversation history - Giới hạn số lượng tin nhắn để tối ưu API
         const recentMessages = currentConversation.messages.slice(-15); // Chỉ gửi 15 tin nhắn gần nhất
         recentMessages.forEach(msg => {
-          if (msg.role === 'system') return; // Skip system messages as we've already added one
           messages.push({
             role: msg.role,
             content: msg.content
@@ -317,11 +317,12 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.appendChild(streamContainer);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Send request to proxy instead of directly to DeepSeek API
-        const response = await fetch(API_PROXY, {
+        // Send request to DeepSeek API
+        const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
           },
           body: JSON.stringify(requestData)
         });
